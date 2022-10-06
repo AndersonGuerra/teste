@@ -1,33 +1,42 @@
-import { useEffect, useState } from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import api from '../services/api';
-import Image from 'next/image';
-import StarIcon from '@mui/icons-material/Star';
-import TrashIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import EditIcon from '@mui/icons-material/Edit';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import { useEffect, useState } from "react";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import api from "../services/api";
+import Image from "next/image";
+import StarIcon from "@mui/icons-material/Star";
+import TrashIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import EditIcon from "@mui/icons-material/Edit";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) router.push("/login");
     api.getAllProducts().then((r) => {
       setProducts(r);
     });
   }, []);
 
+  function logout() {
+    localStorage.removeItem("token");
+    router.push("/login");
+  }
+
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <AppBar component="nav" color="grey" sx={{ p: 4, boxShadow: 1 }}>
         <Toolbar>
           <Image
@@ -40,28 +49,31 @@ export default function Home() {
             component="div"
             sx={{
               flexGrow: 1,
-              display: { xs: 'none', sm: 'block' },
-              color: '#75727F',
+              display: { xs: "none", sm: "block" },
+              color: "#75727F",
               pl: 2,
             }}
           >
             <strong>Lojinha Mime</strong>
           </Typography>
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            <Button sx={{ color: '#75727F' }}>Página Inicial</Button>
-            <Button sx={{ color: '#75727F' }}>Vendas</Button>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            <Button sx={{ color: "#75727F" }}>Página Inicial</Button>
+            <Button sx={{ color: "#75727F" }}>Vendas</Button>
             <Button
               sx={{
-                color: '#75727F',
-                textDecoration: 'underline',
-                textDecorationColor: '#428CCB',
-                textUnderlineOffset: '4px',
+                color: "#75727F",
+                textDecoration: "underline",
+                textDecorationColor: "#428CCB",
+                textUnderlineOffset: "4px",
               }}
             >
               Produtos
             </Button>
-            <Button sx={{ color: '#75727F' }}>Clientes</Button>
-            <Button sx={{ color: '#75727F' }}>Marketing</Button>
+            <Button sx={{ color: "#75727F" }}>Clientes</Button>
+            <Button sx={{ color: "#75727F" }}>Marketing</Button>
+            <Button sx={{ color: "#75727F" }} onClick={() => logout()}>
+              Sair
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>
@@ -72,22 +84,22 @@ export default function Home() {
             <TableHead>
               <TableRow>
                 <TableCell colSpan={3}>
-                  <h1 style={{ color: '#75727F', display: 'inline-block' }}>
+                  <h1 style={{ color: "#75727F", display: "inline-block" }}>
                     Produtos
-                  </h1>{' '}
-                  <span style={{ color: '#75727F', marginLeft: '16px' }}>
+                  </h1>{" "}
+                  <span style={{ color: "#75727F", marginLeft: "16px" }}>
                     {products.length} cadastrados
                   </span>
                 </TableCell>
                 <TableCell align="right">
                   <button
                     style={{
-                      backgroundColor: '#428CCB',
-                      color: 'white',
-                      border: 'none',
-                      padding: '10px',
-                      borderRadius: '6px',
-                      whiteSpace: 'nowrap',
+                      backgroundColor: "#428CCB",
+                      color: "white",
+                      border: "none",
+                      padding: "10px",
+                      borderRadius: "6px",
+                      whiteSpace: "nowrap",
                     }}
                   >
                     + Adicionar Produto
@@ -104,7 +116,7 @@ export default function Home() {
             <TableBody>
               {products.map((product) => (
                 <TableRow key={product.title}>
-                  <TableCell style={{ width: '60%' }}>
+                  <TableCell style={{ width: "60%" }}>
                     <Image src={product.image} width={48} height={48} />
                     <span style={{ marginLeft: 24 }}>{product.title}</span>
                   </TableCell>
