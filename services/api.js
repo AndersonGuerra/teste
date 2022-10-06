@@ -14,7 +14,6 @@ export default {
   },
 
   async authUser(username, password) {
-    console.log("hum");
     const response = await fetch(`${baseUrl}/auth/login`, {
       method: "POST",
       mode: "cors",
@@ -26,7 +25,6 @@ export default {
         password: password,
       }),
     });
-    console.log("hum1");
     const result = await response.json();
     return result;
   },
